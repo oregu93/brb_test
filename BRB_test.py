@@ -139,6 +139,7 @@ import logging
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
+TOKEN = os.environ['TOKEN']
 
 # Enable logging
 logging.basicConfig(
@@ -173,6 +174,7 @@ def echo(update: Update, context: CallbackContext) -> None:
         answer = 'Извините, что-то сломалось :('
       
     update.message.reply_text(answer)
+
 
 
 def main() -> None:
