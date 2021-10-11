@@ -139,7 +139,8 @@ import logging
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-TOKEN = os.environ['TOKEN']
+TOKEN = System.getenv['TOKEN']
+
 
 # Enable logging
 logging.basicConfig(
