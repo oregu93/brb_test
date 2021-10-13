@@ -11,6 +11,7 @@ from decimal import Decimal
 import io
 from datetime import datetime
 import pandas as pd
+import os
 
 from selenium import webdriver
 from time import sleep
@@ -20,7 +21,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from boto.s3.connection import S3Connection         # to get vars from heroku
 TOKEN = S3Connection(os.environ['TOKEN'])   # telegram bot token
-url_0 = S3Connection(os.environ['URL_0'])   # primary url for scrap
+url_h = S3Connection(os.environ['URL_0'])   # primary url for scrap
 
 
 # general bot procedure's code
@@ -29,7 +30,7 @@ def bot(vendor_code):
     search = vendor_code
     # search = str(input('--> '))
     # url_0 = 'https://www.intimissimi.com'
-    url_0 = str(url_0)                             # convert var into string
+    url_0 = str(url_h)                             # convert var into string
     url_search = url_0+'/ru/search/?q='+search
     # print(url_search)
     
