@@ -1,14 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
-# pip install -r requirements.txt
-
-
-# In[3]:
-
+# importing libs
 
 from bs4 import BeautifulSoup
 import requests
@@ -25,14 +18,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
+from boto.s3.connection import S3Connection         # to get vars from heroku
+TOKEN = S3Connection(os.environ['TOKEN'])   # telegram bot token
+url_0 = S3Connection(os.environ['URL_0'])   # primary url for scrap
 
-# In[4]:
 
+# general bot procedure's code
 
 def bot(vendor_code):
     search = vendor_code
     # search = str(input('--> '))
-    url_0 = 'https://www.intimissimi.com'
+    # url_0 = 'https://www.intimissimi.com'
+    url_0 = str(url_0)                             # convert var into string
     url_search = url_0+'/ru/search/?q='+search
     # print(url_search)
     
@@ -75,47 +72,41 @@ def bot(vendor_code):
     sizes = ' '.join(map(str,sizes))
     
     
-    # нажатие кнопки размеров и получение инфы о составе (materials)
-    path="C:\\Users\\user\\Documents\\GitHub\\BRB\\env\\bin\\chromedriver.exe"
-    
-    m_dat=''
-    class TestFunc(object):
-        def __init__(self):
-            self.driver = webdriver.Chrome(path)
-            self.driver.get(url)
-            
-        def but_clck(self):
-    #         sleep(5)
-            mrk="//label/input[@type='radio']"
-            button = self.driver.find_element_by_xpath(mrk)
-    #         button.click()
-    #         button = self.driver.find_element_by_xpath("label[@class='boolean-field_swatch-boolean_dark']")
-            self.driver.execute_script("arguments[0].click();",button)
-            webdriver.ActionChains(self.driver).move_to_element(button).click(button).perform()
-            mt="//div[@class='js-composition-info']"
-            mat_data = self.driver.find_element_by_xpath(mt)
-            global m_dat
-            m_dat = mat_data
-            
-            self.driver.close()
-            self.driver.quit()
-            
-    TestFunc().but_clck()
-    # sleep(5)
-    
-    
-    
+    ##!!! нажатие кнопки размеров и получение инфы о составе (materials)
+    # path="C:\\Users\\user\\Documents\\GitHub\\BRB\\env\\bin\\chromedriver.exe"
+    #
+    # m_dat=''
+    # class TestFunc(object):
+    #     def __init__(self):
+    #         self.driver = webdriver.Chrome(path)
+    #         self.driver.get(url)
+    #
+    #     def but_clck(self):
+    # #         sleep(5)
+    #         mrk="//label/input[@type='radio']"
+    #         button = self.driver.find_element_by_xpath(mrk)
+    # #         button.click()
+    # #         button = self.driver.find_element_by_xpath("label[@class='boolean-field_swatch-boolean_dark']")
+    #         self.driver.execute_script("arguments[0].click();",button)
+    #         webdriver.ActionChains(self.driver).move_to_element(button).click(button).perform()
+    #         mt="//div[@class='js-composition-info']"
+    #         mat_data = self.driver.find_element_by_xpath(mt)
+    #         global m_dat
+    #         m_dat = mat_data
+    #
+    #         self.driver.close()
+    #         self.driver.quit()
+    #
+    # TestFunc().but_clck()
+
     # html_text_M = requests.get(url).text
     # soup_M = BeautifulSoup(html_text_M, 'lxml')
     # material_url = soup_M.find('div', class_='js-composition-info')
     # material_url = soup_M.driver.find_element_by_xpath("//div[@class_='js-composition-info']")
     
     
-    res = {'name':name.strip(),'size':sizes,'color':colors,'material':m_dat,'discription':discription.strip()}
-    # for i in res.keys():
-    #     print(i,':',res[i])
-    #     print()
-    
+    res = {'name':name.strip(),'size':sizes,'color':colors,'material':'m_dat','discription':discription.strip()}
+
     s = f"""
 {'-'*5}
 # Code: {vendor_code.upper()}
@@ -129,18 +120,14 @@ def bot(vendor_code):
         
     return s
 
-# bot('rpd50v')
 
-
-# In[5]:
-
+# telegram bot code
 
 import logging
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-TOKEN = System.getenv['TOKEN']
-
+# TOKEN = System.getenv['TOKEN']
 
 # Enable logging
 logging.basicConfig(
@@ -150,13 +137,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# Define a few command handlers. These usually take the two arguments update and
-# context.
+# Define a few command handlers. These usually take the two arguments update and context
 def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
     update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\!',
+        fr'Welcome on board, {user.mention_markdown_v2()}\!',
         reply_markup=ForceReply(selective=True),
     )
 
