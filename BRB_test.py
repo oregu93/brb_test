@@ -20,8 +20,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from boto.s3.connection import S3Connection         # to get vars from heroku
-TOKEN = S3Connection(os.environ['TOKEN'])   # telegram bot token
-url_h = S3Connection(os.environ['URL_0'])   # primary url for scrap
+TOKEN = os.environ.get('TOKEN')   # telegram bot token
+# url_h = S3Connection(os.environ['URL_0'])   # primary url for scrap
+url_h = os.environ.get('URL_0')   # primary url for scrap
 
 
 # general bot procedure's code
