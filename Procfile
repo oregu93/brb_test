@@ -1,1 +1,1 @@
-worker: python BRB_test.py
+web: python BRB_test.py
